@@ -133,7 +133,8 @@ public class PostgreSQLAdvisoryLockTemplate {
     private void unlock(RuntimeException rethrow) throws FlywaySqlException {
         // With transaction advisory locks, unlocking happens automatically when the transaction ends
         Connection connection = jdbcTemplate.getConnection();
-        if (!prevTransactionExists) {
+        boolean rolledBack = rethrow != null;
+        if (!prevTransactionExists && !rolledBack) {
             try {
                 connection.commit();
             } catch (SQLException se) {
