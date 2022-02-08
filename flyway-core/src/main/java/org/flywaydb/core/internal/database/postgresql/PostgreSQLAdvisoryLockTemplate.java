@@ -149,7 +149,9 @@ public class PostgreSQLAdvisoryLockTemplate {
 
     private void restoreAutoCommit(Connection connection) {
         try {
-            connection.setAutoCommit(oldAutoCommit);
+            if (connection.getAutoCommit() != oldAutoCommit) {
+                connection.setAutoCommit(oldAutoCommit);
+            }
         } catch (SQLException e) {
             LOG.error("Unable to restore autocommit to original value for connection", e);
         }
